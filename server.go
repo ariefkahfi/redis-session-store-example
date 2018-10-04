@@ -61,6 +61,12 @@ func main(){
 		http.ServeFile(w,r , "public/pages/error-login.html")
 	})
 
+	r.Path("/logout").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request){
+		s , _ := rediStore.Get(r,"redis-session")
+		rediStore.Delete(r , w , s)
+
+		http.Redirect(w ,r , "/",302)
+	})
 	
 	r.Path("/login").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request){
 		username := r.FormValue("username")
